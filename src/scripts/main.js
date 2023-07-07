@@ -4,7 +4,7 @@ const startButton = document.querySelector('.start');
 const fieldCellList = document.querySelectorAll('.field-cell');
 const fieldRowList = document.querySelectorAll('.field-row');
 const gameScore = document.querySelector('.game-score');
-// const messageWin = document.querySelector('.message-win');
+const messageWin = document.querySelector('.message-win');
 const messageLose = document.querySelector('.message-lose');
 const messageStart = document.querySelector('.message-start');
 
@@ -33,6 +33,22 @@ const handleStartButton = () => {
 
 function startTheGame() {
   startButton.addEventListener('click', handleStartButton);
+}
+
+function winGame() {
+  if ([...fieldCellList].some(cell => cell.textContent === '2048') === true) {
+    messageStart.classList.add('hidden');
+    messageWin.classList.remove('hidden');
+    startButton.removeEventListener('click', handleStartButton);
+    startButton.addEventListener('click', handleStartButton);
+
+    return true;
+  } else {
+    messageStart.classList.remove('hidden');
+    messageWin.classList.add('hidden');
+
+    return false;
+  }
 }
 
 function loseGame() {
@@ -73,9 +89,14 @@ function loseGame() {
 function emptyFieldNumber() {
   let index;
 
+  const winTheGame = winGame();
   const loseTheGame = loseGame();
 
-  if (loseTheGame === false) {
+  if (winTheGame === true) {
+    return;
+  }
+
+  if (loseTheGame === false || winTheGame === false) {
     do {
       index = Math.floor(Math.random() * 16);
     } while (fieldCellList[index].textContent.length !== 0);
